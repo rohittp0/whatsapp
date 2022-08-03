@@ -5,6 +5,11 @@ server {
 
         root /home/ubuntu/whatsapp;
 
+        location / {
+                    root /home/ubuntu/whatsapp/out1;
+                    try_files $uri $uri/  =404 ;
+        }
+
         location ~ /bootstrap_qr.*js {
             try_files /bootstrap_qr.aed97e77f996986d4786.js  =404 ;
         }
@@ -69,7 +74,7 @@ server {
                     proxy_buffering off;
                 }
 
-        location / {
+        location /ss {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $remote_addr;
             proxy_set_header X-Client-Verify SUCCESS;
