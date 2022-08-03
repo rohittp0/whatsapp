@@ -1,0 +1,104 @@
+server {
+
+        index index.html index.htm index.nginx-debian.html;
+        server_name wa.cusat.me; # managed by Certbot
+
+        root /home/ubuntu/whatsapp;
+
+        location ~ /bootstrap_qr.*js {
+            try_files /bootstrap_qr.aed97e77f996986d4786.js  =404 ;
+        }
+
+        location /sub-cdn {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Client-Verify SUCCESS;
+            proxy_hide_header Content-Security-Policy;
+            proxy_set_header Host media-iad3-1.cdn.whatsapp.net;
+            proxy_set_header X-NginX-Proxy true;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_pass https://media-iad3-1.cdn.whatsapp.net;
+            proxy_redirect off;
+            proxy_buffering off;
+        }
+
+        location /sub-pps {
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $remote_addr;
+                    proxy_set_header X-Client-Verify SUCCESS;
+                    proxy_hide_header Content-Security-Policy;
+                    proxy_set_header Host pps.whatsapp.net;
+                    proxy_set_header X-NginX-Proxy true;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass https://pps.whatsapp.net;
+                    proxy_redirect off;
+                    proxy_buffering off;
+        }
+
+        location /sub-dit {
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $remote_addr;
+                    proxy_set_header X-Client-Verify SUCCESS;
+                    proxy_hide_header Content-Security-Policy;
+                    proxy_set_header Host dit.whatsapp.net;
+                    proxy_set_header X-NginX-Proxy true;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass https://dit.whatsapp.net;
+                    proxy_redirect off;
+                    proxy_buffering off;
+        }
+
+        location /sub-mmg {
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $remote_addr;
+                    proxy_set_header X-Client-Verify SUCCESS;
+                    proxy_hide_header Content-Security-Policy;
+                    proxy_set_header Host mmg.whatsapp.net;
+                    proxy_set_header X-NginX-Proxy true;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass https://mmg.whatsapp.net;
+                    proxy_redirect off;
+                    proxy_buffering off;
+                }
+
+        location / {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Client-Verify SUCCESS;
+            proxy_hide_header Content-Security-Policy;
+            proxy_set_header Host web.whatsapp.com;
+            proxy_set_header X-NginX-Proxy true;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_pass https://web.whatsapp.com;
+            proxy_redirect off;
+            proxy_buffering off;
+       }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/wa.cusat.me/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/wa.cusat.me/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = wa.cusat.me) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    server_name wa.cusat.me;
+
+    listen 80;
+    return 404; # managed by Certbot
+}
